@@ -1,1 +1,1 @@
-# kinetic
+# Kinetic Sculpture Workshop
