@@ -38,8 +38,8 @@ function preload() {
 }
 
 function setup() {
-  createCanvas(950, 700, WEBGL);
-  
+  createCanvas(windowWidth, windowHeight, WEBGL);
+
   // COLORS
   redPink = color(115, 0, 58);
   pinkMagenta = color(176, 82, 111);
@@ -48,48 +48,52 @@ function setup() {
   mutedOrange = color(225,112,73);
   petroleumBlue = color(15,102,144);
   wineRed = color(122,19,53);
-  
+
   // DEBUG
-  debugMode(GRID);
-  
+  // debugMode(GRID);
+
   // CAMERA
   cam = createCamera(); // Create a p5.Camera object.
   cam.setPosition(-700, -350, 900); // Top-center.
   cam.lookAt(0, -200, 0); // Point camera at coord.
-  
+
   // ortho(-width / 2, width / 2, -height / 2, height / 2, 0, 2000); // Left, Right, Bottom, Top, Near, Far
-  
+
   // perspective(PI / 3, width / height, 1, 2000); // FOV, Aspect Ratio, Near, Far
-  
+
   // ----------------------------------------
-  
+
   // VIDEO
   video = createCapture(VIDEO);
   video.size(numCylinders, 240); // Resize video to match cylinder slices
   video.hide();
-  
+
   for (let i = 0; i < numCylinders; i++) {
-    slices[i] = createGraphics(1, 240); 
+    slices[i] = createGraphics(1, 240);
     // Blank graphics buffer for slices:
     // A narrow 1-pixel-wide texture per cylinder
   }
-  
+
   // ----------------------------------------
+}
+
+function windowResized() {
+  resizeCanvas(windowWidth, windowHeight);
 }
 
 function draw() {
   background(lightPink);
-  
+
   // LIGHTS
   ambientLight(color('white')); // RGB values OR (color('white'))
   directionalLight (80, 80, 80, -100, -1, 0);
     // How much of R, G, B channels will be allowed in.
     // (origin at x, y, z)
   debugLightPositions();
-  
+
   // Call every frame to adjust camera based on mouse/touch
   orbitControl();
-  
+
   displayWalls();
   displayDesk();
   displayLamp();
@@ -105,7 +109,7 @@ function displayWalls(){
   fill(pinkMagenta);
   specularMaterial(100); // Reflects light!
   box(1250, 10, 800); // [width], [height], [depth]
-  
+
   // CEILING
   push();
   fill(230);
@@ -114,7 +118,7 @@ function displayWalls(){
   specularMaterial(255); // Reflects light!
   plane(width + 300, height);
   pop();
-  
+
   // BACK WALL
   push();
   fill(weedsGreen);
@@ -125,7 +129,7 @@ function displayWalls(){
 }
 
 function displayLamp(){
-  // BULB  
+  // BULB
   spotLight(
     color(500, 0, 500),
     -300, -600, -10, // Position (bulbPos)
@@ -133,12 +137,12 @@ function displayLamp(){
     PI / 3, // Angle
     100 // Concentration
   );
-  
+
   // LAMP HARDWARE
   push();
   let lampPos = createVector(-300, 140, 0);
   translate(lampPos.x, lampPos.y, lampPos.z); // move all 3 base geometries
-  
+
     push();
     translate(0, -150, 0);
     fill(petroleumBlue);
@@ -153,7 +157,7 @@ function displayLamp(){
     ambientMaterial(255, 120, 50);
     torus(40, 20); // Top lamp
     pop();
-  
+
   pop();
 }
 
@@ -174,11 +178,11 @@ function displayChair(){
   push();
   translate(-250, -105, -200);
   rotateX(PI/2);
-  
+
   currentChairAngle = lerp(currentChairAngle, chairAngle, 0.1);
     // Lerp calculates a # between two # at an increment.
   rotateZ(currentChairAngle);
-  
+
   // Debugging chair texture with checkerboard pattern:
       // If the checkerboard pattern looks distorted, the UV mapping is off in the .obj file.
       // textureWrap(CLAMP);
@@ -186,14 +190,14 @@ function displayChair(){
       // textureWrap(REPEAT);
       // checkerboardTexture.resize(1024, 1024);
       // texture(checkerboardTexture);
-  
+
   texture(curvesTexture);
   model(chair);
   pop();
 }
 
 function keyPressed(){ // CHAIR MOTION
-  if (key === 'C' || key === 'c') { 
+  if (key === 'C' || key === 'c') {
     let newAngle = chairRotated ? 0 : PI / 4; // Toggle between 0 and PI/4
     chairRotated = !chairRotated; // Flip state
     chairAngle = newAngle;
@@ -204,16 +208,16 @@ function displayArt(){
   for (let i = 0; i < numCylinders; i++){
     push();
     translate(i*20, -300, -390); // Original positioning
-    
+
     // Continuous animation of Y position
     translate(0, sin(frameCount * 0.08 + i) * 10, 0);
-    
+
     // Animate the height of each cylinder dynamically
-    let h = 200 + sin(frameCount * 0.08 + i) * 50; 
+    let h = 200 + sin(frameCount * 0.08 + i) * 50;
       // Base height 200, oscillating ±50
-    
+
     cylinder(6, h);
-    pop();  
+    pop();
   }
 }
 
@@ -232,12 +236,12 @@ function displayVideoOnArt(){
   for (let i = 0; i < numCylinders; i++) {
     push();
     translate( // Original position
-      -300 + i * 2.5 * cylinderWidth - (cylinderWidth * numCylinders) / 2, 
+      -300 + i * 2.5 * cylinderWidth - (cylinderWidth * numCylinders) / 2,
           // 2.5 => spacing between cylinders
-      -350, 
+      -350,
       -390
     );
-    
+
     // Animating Y position of cylinders
     translate(0, cos(frameCount * 0.2 + i) * 10, 0);
 
@@ -260,6 +264,6 @@ function debugLightPositions(){
 
 // NOTES
 
-// Ray's tip: 
+// Ray's tip:
 // Make your object white and play with light.
 // Red light (255, 0, 0) on a blue object (0, 0, 255) -> Object will be black because values don't have an intersection.
