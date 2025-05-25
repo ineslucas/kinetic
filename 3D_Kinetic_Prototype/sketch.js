@@ -5,6 +5,9 @@
 
 let angle = 0;
 
+// ml5
+let faceMesh;
+
 // Video Art
 let video;
 let numCylinders = 16;
@@ -22,6 +25,17 @@ let wineRed;
 
 function preload() {
   // OBJ files don’t include materials by default, we need to manually apply color, shading, or textures.
+  // Initialize FaceMesh model with a maximum of one face
+  faceMesh = ml5.faceMesh({ maxFaces: 1 });
+
+  // KEEP ON getting the face mesh projected onto ceiling
+  // THEN create the 3D cilinder structure with motors that moves up and down.
+    // Maybe make cylinders transparent.
+    // have dots with color, mapped to face mesh color & shape.
+    // Have dots emit light.
+  // then map dots (?) to the face mesh.
+
+  // 8:30 max shower!!!
 }
 
 function setup() {

@@ -1,0 +1,12 @@
+{
+	"folders": [
+		{
+			"path": "."
+		},
+		{
+			"name": "quiet-waters-arduino",
+			"path": "quiet-waters-arduino"
+		}
+	],
+  "settings": {}
+}
